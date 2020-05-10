@@ -1,13 +1,19 @@
-import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header } from '@nestjs/common';
+import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header, Param, Body, Delete } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { TicketsService } from './tickets.service';
+import { CreateTicketDTO } from './dto/create-ticket.dto';
+import { Ticket } from './interfaces/ticket.interface';
 
 @Controller('tickets')
 export class TicketsController {
+    constructor(
+        private ticketService: TicketsService
+    ){}
+
     @Post()
-    @HttpCode(204)
-    @Header('Authorization', 'Bearer 1234')
-    create(): string {
-        return "Post"
+    async create(@Body() ticket: CreateTicketDTO): Promise<Ticket[]> {
+        console.log('toto', ticket);
+        return this.ticketService.create(ticket);
     }
 
     @Put()
@@ -17,19 +23,26 @@ export class TicketsController {
 
 
     @Get()
-    findAll(
-        @Req()
-        request: Request,
-        @Res()
-        response: Response,
-        @Query() query
-    ): any {
-        console.log('query', query)
-        return response.json({msg: "Holy moly"})
+    async findAll(
+        @Param()
+        params
+    ): Promise<Ticket[]> {
+        return this.ticketService.findAll();
     }
 
     @Get(':id')
-    findOne(): string {
-        return 'One'
+    async findOne(
+        @Param()
+        params
+    ): Promise<Ticket> {
+        return this.ticketService.findOne(params.id);
+    }
+
+    @Delete(':id')
+    async delete(
+        @Param()
+        params
+    ): Promise<Ticket[]> {
+        return this.ticketService.delete(params.id);
     }
 }
