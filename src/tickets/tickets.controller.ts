@@ -5,16 +5,20 @@ import { CreateTicketDTO } from './dto/create-ticket.dto';
 import { Ticket } from './interfaces/ticket.interface';
 import { HttpExceptionFilter } from 'src/common/filters/http.exception.filter';
 import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
+import { ApiTags, ApiCreatedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 
 @Controller('tickets')
 @UseFilters(HttpExceptionFilter)
 @UseInterceptors(TransformInterceptor)
+@ApiTags('tickets')
 export class TicketsController {
     constructor(
         private ticketService: TicketsService
     ){}
 
     @Post()
+    @ApiCreatedResponse({description: 'Ticket successfully created'})
+    @ApiForbiddenResponse({description: 'Forbidden'})
     async create(@Body() ticket: CreateTicketDTO): Promise<Ticket[]> {
         console.log('toto', ticket);
         return this.ticketService.create(ticket);
