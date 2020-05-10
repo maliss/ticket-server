@@ -1,12 +1,14 @@
-import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header, Param, Body, Delete, UseFilters, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header, Param, Body, Delete, UseFilters, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDTO } from './dto/create-ticket.dto';
 import { Ticket } from './interfaces/ticket.interface';
 import { HttpExceptionFilter } from 'src/common/filters/http.exception.filter';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 
 @Controller('tickets')
 @UseFilters(HttpExceptionFilter)
+@UseInterceptors(TransformInterceptor)
 export class TicketsController {
     constructor(
         private ticketService: TicketsService
