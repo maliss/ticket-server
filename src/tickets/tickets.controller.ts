@@ -1,10 +1,12 @@
-import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Req, Res, Query, Post, Put, HttpCode, Header, Param, Body, Delete, UseFilters, NotFoundException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDTO } from './dto/create-ticket.dto';
 import { Ticket } from './interfaces/ticket.interface';
+import { HttpExceptionFilter } from 'src/common/filters/http.exception.filter';
 
 @Controller('tickets')
+@UseFilters(HttpExceptionFilter)
 export class TicketsController {
     constructor(
         private ticketService: TicketsService
@@ -43,6 +45,9 @@ export class TicketsController {
         @Param()
         params
     ): Promise<Ticket[]> {
-        return this.ticketService.delete(params.id);
+        // throw new HttpException('something went wrong', HttpStatus.BAD_REQUEST);
+        // throw new ForbiddenException();
+        throw new NotFoundException();
+        // return this.ticketService.delete(params.id);
     }
 }
