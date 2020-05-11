@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Ticket } from './interfaces/ticket.interface';
+import { Tickets } from './tickets.entity';
 
 @Injectable()
 export class TicketsService {
+    constructor(
+    @Inject('TICKETS_REPOSITORY') private readonly catsRepository: typeof Tickets,
+    ) {}
+      
     tickets: Ticket[] = [];
 
     create(ticket: Ticket) {
